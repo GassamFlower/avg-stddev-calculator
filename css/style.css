@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 860px;
     margin: 0 auto;
     background: #fff;
     border-radius: 8px;
@@ -91,6 +91,11 @@ textarea:focus {
     transition: all 0.2s;
 }
 
+.btn:focus-visible {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}
+
 .btn-primary {
     background: #3498db;
     color: #fff;
@@ -109,6 +114,16 @@ textarea:focus {
     background: #d5dbdb;
 }
 
+.btn-copy {
+    background: #27ae60;
+    color: #fff;
+    margin-left: auto;
+}
+
+.btn-copy:hover {
+    background: #219a52;
+}
+
 .results {
     background: #f8f9fa;
     border-radius: 8px;
@@ -124,14 +139,14 @@ textarea:focus {
 
 .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
     margin-bottom: 20px;
 }
 
 .result-card {
     background: #fff;
-    padding: 16px;
+    padding: 14px;
     border-radius: 6px;
     border: 2px solid #e0e0e0;
     text-align: center;
@@ -143,15 +158,76 @@ textarea:focus {
 }
 
 .result-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #7f8c8d;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-weight: 500;
 }
 
 .result-value {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.histogram-section {
+    margin: 20px 0;
+}
+
+.histogram-section h3 {
+    color: #2c3e50;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.histogram-wrapper {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+#histogram {
+    display: block;
+    width: 100%;
+}
+
+.sorted-section {
+    margin: 20px 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.sorted-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.sorted-values {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    word-break: break-all;
+    margin-bottom: 12px;
+}
+
+.five-num {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.five-num strong {
     color: #2c3e50;
     font-family: 'Courier New', monospace;
 }
@@ -225,13 +301,13 @@ textarea:focus {
 
 .info-section h3 {
     color: #2c3e50;
-    margin: 20px 0 10px 0;
-    font-size: 1.1rem;
+    margin: 24px 0 10px 0;
+    font-size: 1.15rem;
 }
 
 .info-section h4 {
     color: #34495e;
-    margin: 14px 0 8px 0;
+    margin: 16px 0 8px 0;
     font-size: 1rem;
 }
 
@@ -240,7 +316,7 @@ textarea:focus {
     color: #555;
 }
 
-.info-section ul {
+.info-section ul, .info-section ol {
     margin: 10px 0 10px 20px;
     color: #555;
 }
@@ -259,6 +335,110 @@ textarea:focus {
     margin: 10px 0;
     text-align: center;
     border-left: 4px solid #3498db;
+}
+
+.use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.use-case-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.use-case-card h4 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.use-case-card p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.interpretation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.9rem;
+}
+
+.interpretation-table th,
+.interpretation-table td {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.interpretation-table th {
+    background: #2c3e50;
+    color: #fff;
+    font-weight: 500;
+}
+
+.interpretation-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.faq-section {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 30px;
+    margin-top: 30px;
+}
+
+.faq-section h2 {
+    color: #2c3e50;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-item details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+    padding: 4px 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-item details summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item details summary::after {
+    content: '+';
+    font-size: 1.3rem;
+    color: #3498db;
+    font-weight: 300;
+    transition: transform 0.2s;
+}
+
+.faq-item details[open] summary::after {
+    content: '-';
+}
+
+.faq-item details p {
+    margin-top: 10px;
+    color: #555;
+    line-height: 1.7;
 }
 
 footer {
@@ -284,7 +464,7 @@ footer {
     }
 
     .results-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .button-group {
@@ -293,5 +473,28 @@ footer {
 
     .btn {
         width: 100%;
+        text-align: center;
+    }
+
+    .btn-copy {
+        margin-left: 0;
+    }
+
+    .five-num {
+        gap: 8px;
+        font-size: 0.8rem;
+    }
+
+    .use-cases-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .interpretation-table {
+        font-size: 0.8rem;
+    }
+
+    .interpretation-table th,
+    .interpretation-table td {
+        padding: 6px 8px;
     }
 }

@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Average and Standard Deviation Calculator</title>
-    <meta name="description" content="Free online calculator to find the average (mean) and standard deviation of a data set. Shows step-by-step calculations for sample and population standard deviation.">
+    <meta name="description" content="Free online calculator to find the average, standard deviation, variance, median, mode, and range of a data set. Shows step-by-step calculations and data distribution chart.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/">
 
-    <!-- Open Graph -->
     <meta property="og:title" content="Average and Standard Deviation Calculator">
-    <meta property="og:description" content="Free online calculator for mean, standard deviation, and variance. Shows step-by-step calculations.">
+    <meta property="og:description" content="Free online calculator for mean, standard deviation, variance, median, mode, and range. Shows step-by-step calculations and histogram.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/">
 
-    <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -22,12 +20,69 @@
       "name": "Average and Standard Deviation Calculator",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "Web Browser",
-      "description": "Free online calculator to find the average and standard deviation of a data set. Shows step-by-step calculations for sample and population standard deviation.",
+      "description": "Free online calculator to find the average, standard deviation, variance, median, mode, and range. Shows step-by-step calculations and data distribution chart.",
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is standard deviation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Standard deviation is a measure of how spread out numbers are from the mean (average). A low standard deviation means the data points are close to the average, while a high standard deviation means they are spread over a wider range."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I use sample vs. population standard deviation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use sample standard deviation (s) when your data is a subset of a larger population — this is the most common case in research, surveys, and quality control. Use population standard deviation (σ) only when you have data for every member of the population, such as test scores for an entire class."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between variance and standard deviation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Variance is the average of the squared differences from the mean. Standard deviation is the square root of variance. Standard deviation is more commonly used because it is in the same units as the original data, making it easier to interpret."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you calculate standard deviation by hand?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Step 1: Find the mean of the data. Step 2: Subtract the mean from each value and square the result. Step 3: Add all the squared differences. Step 4: Divide by n-1 (sample) or n (population) to get the variance. Step 5: Take the square root of the variance to get the standard deviation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does a high standard deviation mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A high standard deviation means the data values are spread out over a wide range from the mean. In practical terms, this indicates high variability or inconsistency in the data. For example, test scores with a high standard deviation mean students performed very differently from each other."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the empirical rule (68-95-99.7 rule)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For a normal distribution: approximately 68% of data falls within 1 standard deviation of the mean, 95% within 2 standard deviations, and 99.7% within 3 standard deviations. This rule helps understand how data is distributed around the average."
+          }
+        }
+      ]
     }
     </script>
 
@@ -37,33 +92,26 @@
     <div class="container">
         <header>
             <h1>Average and Standard Deviation Calculator</h1>
-            <p class="subtitle">Enter your data set to calculate mean, standard deviation, and variance</p>
+            <p class="subtitle">Enter your data set to calculate mean, standard deviation, variance, median, mode, and more</p>
         </header>
 
         <main>
-            <section class="calculator-section">
+            <section class="calculator-section" aria-label="Calculator">
                 <div class="input-group">
                     <label for="dataInput">Enter your numbers (separated by commas, spaces, or line breaks):</label>
-                    <textarea id="dataInput" placeholder="e.g., 10, 20, 30, 40, 50&#10;or one number per line"></textarea>
+                    <textarea id="dataInput" placeholder="e.g., 10, 20, 30, 40, 50&#10;or one number per line&#10;&#10;Results update automatically as you type" aria-describedby="inputHelp"></textarea>
                 </div>
 
                 <div class="button-group">
                     <button id="calculateBtn" class="btn btn-primary">Calculate</button>
                     <button id="clearBtn" class="btn btn-secondary">Clear</button>
                     <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                    <button id="copyBtn" class="btn btn-copy" style="display: none;" aria-label="Copy results to clipboard">Copy Results</button>
                 </div>
 
-                <div id="results" class="results" style="display: none;">
+                <div id="results" class="results" style="display: none;" aria-live="polite">
                     <h2>Results</h2>
                     <div class="results-grid">
-                        <div class="result-card">
-                            <div class="result-label">Count (n)</div>
-                            <div id="count" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Sum</div>
-                            <div id="sum" class="result-value">—</div>
-                        </div>
                         <div class="result-card highlight">
                             <div class="result-label">Average (Mean)</div>
                             <div id="mean" class="result-value">—</div>
@@ -84,7 +132,44 @@
                             <div class="result-label">Population Variance (σ²)</div>
                             <div id="popVariance" class="result-value">—</div>
                         </div>
+                        <div class="result-card">
+                            <div class="result-label">Median</div>
+                            <div id="median" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Mode</div>
+                            <div id="mode" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Range</div>
+                            <div id="range" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Min</div>
+                            <div id="min" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Max</div>
+                            <div id="max" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Count (n)</div>
+                            <div id="count" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Sum</div>
+                            <div id="sum" class="result-value">—</div>
+                        </div>
                     </div>
+
+                    <div class="histogram-section">
+                        <h3>Data Distribution</h3>
+                        <div class="histogram-wrapper">
+                            <canvas id="histogram" aria-label="Histogram showing the distribution of your data"></canvas>
+                        </div>
+                    </div>
+
+                    <div id="sortedData" class="sorted-section" aria-label="Sorted data and five-number summary"></div>
 
                     <details class="steps-section">
                         <summary>Show Step-by-Step Calculation</summary>
@@ -92,21 +177,21 @@
                     </details>
                 </div>
 
-                <div id="error" class="error" style="display: none;"></div>
+                <div id="error" class="error" style="display: none;" role="alert"></div>
             </section>
 
-            <section class="info-section">
+            <section class="info-section" aria-label="How to calculate">
                 <h2>How to Calculate Average and Standard Deviation</h2>
 
                 <h3>Average (Mean)</h3>
-                <p>The average is the sum of all values divided by the number of values:</p>
+                <p>The average is the sum of all values divided by the number of values. It represents the central tendency of your data:</p>
                 <div class="formula">x̄ = (Σxᵢ) / n</div>
 
                 <h3>Standard Deviation</h3>
-                <p>Standard deviation measures how spread out the data is from the mean.</p>
+                <p>Standard deviation measures how spread out the data is from the mean. It is one of the most widely used measures of variability in statistics.</p>
 
                 <h4>Sample Standard Deviation</h4>
-                <p>Use this when your data is a sample from a larger population:</p>
+                <p>Use this when your data is a sample from a larger population. The division by (n − 1) is called Bessel's correction:</p>
                 <div class="formula">s = √[ Σ(xᵢ - x̄)² / (n - 1) ]</div>
 
                 <h4>Population Standard Deviation</h4>
@@ -115,14 +200,130 @@
 
                 <h3>When to Use Each</h3>
                 <ul>
-                    <li><strong>Sample standard deviation (s):</strong> Use when analyzing a subset of data to estimate the variability of a larger population. This is the most common case in research and quality control.</li>
-                    <li><strong>Population standard deviation (σ):</strong> Use when you have data for every member of the population you're studying, such as test scores for an entire class.</li>
+                    <li><strong>Sample standard deviation (s):</strong> Use when analyzing a subset of data to estimate the variability of a larger population. This is the most common case in research, surveys, and quality control.</li>
+                    <li><strong>Population standard deviation (σ):</strong> Use when you have data for every member of the population you're studying, such as test scores for an entire class or measurements of every item in a batch.</li>
                 </ul>
+
+                <h3>Understanding Your Results</h3>
+                <p>The standard deviation tells you how much variation exists in your data. Here's how to interpret it:</p>
+
+                <table class="interpretation-table">
+                    <thead>
+                        <tr>
+                            <th>Standard Deviation</th>
+                            <th>What It Means</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Low (close to 0)</td>
+                            <td>Data points are clustered tightly around the mean</td>
+                            <td>Test scores: 78, 80, 82, 79, 81 (s ≈ 1.6)</td>
+                        </tr>
+                        <tr>
+                            <td>Moderate</td>
+                            <td>Data has a reasonable spread around the mean</td>
+                            <td>Test scores: 65, 72, 80, 88, 95 (s ≈ 11.4)</td>
+                        </tr>
+                        <tr>
+                            <td>High</td>
+                            <td>Data points are spread over a wide range</td>
+                            <td>Test scores: 30, 50, 70, 90, 100 (s ≈ 27.4)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>The Empirical Rule (68-95-99.7)</h3>
+                <p>For data that follows a normal (bell-shaped) distribution:</p>
+                <ul>
+                    <li><strong>68%</strong> of data falls within <strong>1 standard deviation</strong> of the mean</li>
+                    <li><strong>95%</strong> of data falls within <strong>2 standard deviations</strong> of the mean</li>
+                    <li><strong>99.7%</strong> of data falls within <strong>3 standard deviations</strong> of the mean</li>
+                </ul>
+                <p>This rule is useful for identifying outliers — data points beyond 3 standard deviations from the mean are very unusual in a normal distribution.</p>
+
+                <h3>Real-World Use Cases</h3>
+                <div class="use-cases-grid">
+                    <div class="use-case-card">
+                        <h4>Finance & Investing</h4>
+                        <p>Standard deviation measures investment volatility. A stock with high standard deviation has unpredictable returns, while low standard deviation indicates stable performance. Used in portfolio risk analysis and Value at Risk (VaR) calculations.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Education & Testing</h4>
+                        <p>Teachers use standard deviation to understand score distribution. A low SD means most students scored similarly; a high SD suggests a wide gap between high and low performers. Helps identify whether a test was appropriately difficult.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Quality Control</h4>
+                        <p>Manufacturers use standard deviation to monitor product consistency. Six Sigma methodology aims for processes within 6 standard deviations. Low SD in product measurements means consistent quality.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Science & Research</h4>
+                        <p>Researchers report standard deviation alongside means to show data reliability. It's essential for hypothesis testing, confidence intervals, and determining whether results are statistically significant.</p>
+                    </div>
+                </div>
+
+                <h3>Example: Calculating Standard Deviation Step by Step</h3>
+                <p>Let's calculate the standard deviation for this data set: <strong>10, 12, 23, 23, 16, 23, 21, 15</strong></p>
+                <ol>
+                    <li><strong>Find the mean:</strong> (10 + 12 + 23 + 23 + 16 + 23 + 21 + 15) / 8 = 143 / 8 = 17.875</li>
+                    <li><strong>Find squared differences:</strong> (10−17.875)² = 62.02, (12−17.875)² = 34.52, ... for each value</li>
+                    <li><strong>Sum of squared differences:</strong> 62.02 + 34.52 + 26.02 + 26.02 + 3.52 + 26.02 + 9.77 + 8.27 = 224.875</li>
+                    <li><strong>Sample variance:</strong> 224.875 / (8−1) = 32.125</li>
+                    <li><strong>Sample standard deviation:</strong> √32.125 ≈ 5.67</li>
+                </ol>
+                <p>Try entering these numbers in the calculator above and click "Show Step-by-Step Calculation" to see the full working.</p>
+            </section>
+
+            <section class="faq-section" aria-label="Frequently asked questions">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>What is standard deviation?</summary>
+                        <p>Standard deviation is a measure of how spread out numbers are from the mean (average). A low standard deviation means the data points are close to the average, while a high standard deviation means they are spread over a wider range. It is calculated as the square root of the variance.</p>
+                    </details>
+                </div>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>When should I use sample vs. population standard deviation?</summary>
+                        <p>Use <strong>sample standard deviation (s)</strong> when your data is a subset of a larger population — this is the most common case in research, surveys, and quality control. Use <strong>population standard deviation (σ)</strong> only when you have data for every member of the population, such as test scores for an entire class.</p>
+                    </details>
+                </div>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>What is the difference between variance and standard deviation?</summary>
+                        <p>Variance is the average of the squared differences from the mean. Standard deviation is the square root of variance. Standard deviation is more commonly used because it is expressed in the same units as the original data, making it easier to interpret. For example, if your data is in meters, the standard deviation is also in meters, while the variance is in square meters.</p>
+                    </details>
+                </div>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>How do you calculate standard deviation by hand?</summary>
+                        <p>Follow these 5 steps: (1) Find the mean of the data. (2) Subtract the mean from each value and square the result. (3) Add all the squared differences together. (4) Divide by n−1 (for sample) or n (for population) to get the variance. (5) Take the square root of the variance to get the standard deviation.</p>
+                    </details>
+                </div>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>What does a high standard deviation mean?</summary>
+                        <p>A high standard deviation means the data values are spread out over a wide range from the mean. In practical terms, this indicates high variability or inconsistency. For example, if two classes have the same average test score but different standard deviations, the class with the higher standard deviation has a wider gap between high and low performers.</p>
+                    </details>
+                </div>
+
+                <div class="faq-item">
+                    <details>
+                        <summary>What is the empirical rule (68-95-99.7 rule)?</summary>
+                        <p>For a normal (bell-shaped) distribution: approximately 68% of data falls within 1 standard deviation of the mean, 95% within 2 standard deviations, and 99.7% within 3 standard deviations. This rule helps you understand how data is distributed and identify potential outliers — values beyond 3 standard deviations are very unusual.</p>
+                    </details>
+                </div>
             </section>
         </main>
 
         <footer>
-            <p>Free online statistical calculator. Calculate mean, standard deviation, and variance instantly.</p>
+            <p>Free online statistical calculator. Calculate mean, standard deviation, variance, median, mode, and range instantly.</p>
         </footer>
     </div>
 
