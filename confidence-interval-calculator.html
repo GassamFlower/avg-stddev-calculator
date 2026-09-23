@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confidence Interval Calculator — Margin of Error & CI</title>
+    <meta name="description" content="Free confidence interval calculator to find the confidence interval, margin of error, and critical value for a population mean. Supports 90%, 95%, and 99% confidence levels.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/confidence-interval-calculator.html">
+
+    <meta property="og:title" content="Confidence Interval Calculator — Margin of Error & CI">
+    <meta property="og:description" content="Free confidence interval calculator. Find CI, margin of error, and critical value for population mean.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/confidence-interval-calculator.html">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Confidence Interval Calculator — Margin of Error & CI">
+    <meta name="twitter:description" content="Free confidence interval calculator. Find CI, margin of error, and critical value instantly.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Confidence Interval Calculator",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": "Free confidence interval calculator to find CI, margin of error, and critical value for a population mean.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Confidence Interval Calculator</h1>
+            <p class="subtitle">Calculate the confidence interval, margin of error, and critical value for a population mean</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </header>
+
+        <main>
+            <section class="calculator-section" aria-label="Confidence Interval Calculator">
+                <div class="input-group">
+                    <label for="sampleMean">Sample Mean (x̄):</label>
+                    <input type="text" id="sampleMean" class="single-input" placeholder="e.g., 75">
+                </div>
+                <div class="input-group">
+                    <label for="sampleSD">Sample Standard Deviation (s) or Population σ:</label>
+                    <input type="text" id="sampleSD" class="single-input" placeholder="e.g., 10">
+                </div>
+                <div class="input-group">
+                    <label for="sampleSize">Sample Size (n):</label>
+                    <input type="text" id="sampleSize" class="single-input" placeholder="e.g., 50">
+                </div>
+                <div class="input-group">
+                    <label for="confLevel">Confidence Level:</label>
+                    <select id="confLevel" class="single-input">
+                        <option value="0.80">80%</option>
+                        <option value="0.85">85%</option>
+                        <option value="0.90">90%</option>
+                        <option value="0.95" selected>95%</option>
+                        <option value="0.99">99%</option>
+                        <option value="0.995">99.5%</option>
+                        <option value="0.999">99.9%</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                    <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                    <button id="copyBtn" class="btn btn-copy" style="display:none;">Copy Results</button>
+                </div>
+
+                <div id="results" class="results" style="display:none;" aria-live="polite">
+                    <h2>Results</h2>
+                    <div class="results-grid">
+                        <div class="result-card highlight">
+                            <div class="result-label">Confidence Interval</div>
+                            <div id="ci" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Margin of Error (E)</div>
+                            <div id="margin" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Lower Bound</div>
+                            <div id="lower" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Upper Bound</div>
+                            <div id="upper" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Critical Value (z*)</div>
+                            <div id="critical" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Standard Error (SE)</div>
+                            <div id="se" class="result-value">—</div>
+                        </div>
+                    </div>
+                    <details class="steps-section">
+                        <summary>Show Step-by-Step Calculation</summary>
+                        <div id="steps" class="steps-content"></div>
+                    </details>
+                </div>
+                <div id="error" class="error" style="display:none;" role="alert"></div>
+            </section>
+
+            <section class="info-section">
+                <h2>What Is a Confidence Interval?</h2>
+                <p>A confidence interval is a range of values that is likely to contain the true population parameter (such as the mean). A 95% confidence interval means that if you were to take many samples and compute a confidence interval from each, about 95% of those intervals would contain the true population mean.</p>
+
+                <h3>Confidence Interval Formula</h3>
+                <div class="formula">CI = x̄ ± z* × (s / √n)</div>
+                <p>Where:</p>
+                <ul>
+                    <li><strong>x̄</strong> = sample mean</li>
+                    <li><strong>z*</strong> = critical value (based on confidence level)</li>
+                    <li><strong>s</strong> = sample standard deviation</li>
+                    <li><strong>n</strong> = sample size</li>
+                    <li><strong>s / √n</strong> = standard error of the mean (SE)</li>
+                </ul>
+
+                <h3>Critical Values (z*) for Common Confidence Levels</h3>
+                <table class="interpretation-table">
+                    <thead>
+                        <tr><th>Confidence Level</th><th>α (significance)</th><th>Critical Value (z*)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>80%</td><td>0.20</td><td>1.282</td></tr>
+                        <tr><td>90%</td><td>0.10</td><td>1.645</td></tr>
+                        <tr><td>95%</td><td>0.05</td><td>1.960</td></tr>
+                        <tr><td>99%</td><td>0.01</td><td>2.576</td></tr>
+                        <tr><td>99.9%</td><td>0.001</td><td>3.291</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Margin of Error</h3>
+                <p>The margin of error is the half-width of the confidence interval. It tells you how much the sample estimate might differ from the true population value:</p>
+                <div class="formula">E = z* × (s / √n)</div>
+                <p>The margin of error decreases when:</p>
+                <ul>
+                    <li>Sample size (n) increases — more data means more precision</li>
+                    <li>Standard deviation (s) decreases — less variability means more precision</li>
+                    <li>Confidence level decreases — less certainty means a narrower interval</li>
+                </ul>
+
+                <h3>How to Interpret a Confidence Interval</h3>
+                <p>If a poll reports "52% support, with a margin of error of ±3% at 95% confidence," the confidence interval is <strong>(49%, 55%)</strong>. This means we are 95% confident that the true population support is between 49% and 55%.</p>
+                <p>Important: It is <em>not</em> correct to say "there is a 95% probability that the true mean is in this interval." The true mean is fixed; the interval is random. The 95% refers to the long-run frequency of intervals that would contain the true mean.</p>
+
+                <h3>Example</h3>
+                <p>A sample of <strong>n = 50</strong> students has a mean test score of <strong>x̄ = 75</strong> with standard deviation <strong>s = 10</strong>. Find the 95% confidence interval.</p>
+                <ol>
+                    <li>Standard Error: SE = 10 / √50 = 10 / 7.071 = 1.414</li>
+                    <li>Critical value for 95%: z* = 1.960</li>
+                    <li>Margin of Error: E = 1.960 × 1.414 = 2.772</li>
+                    <li>CI = 75 ± 2.772 = <strong>(72.228, 77.772)</strong></li>
+                </ol>
+                <p>We are 95% confident that the true population mean test score is between 72.228 and 77.772.</p>
+            </section>
+
+            <section class="related-calculators">
+                <h2>Related Calculators</h2>
+                <div class="related-grid">
+                    <a href="index.html" class="related-link">Average &amp; Std Dev Calculator<span class="related-desc">Calculate mean and standard deviation</span></a>
+                    <a href="variance-calculator.html" class="related-link">Variance Calculator<span class="related-desc">Calculate sample and population variance</span></a>
+                    <a href="median-calculator.html" class="related-link">Median Calculator<span class="related-desc">Find the median, mean, and mode</span></a>
+                    <a href="z-score-calculator.html" class="related-link">Z-Score Calculator<span class="related-desc">Calculate z-scores for normal distribution</span></a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Free online confidence interval calculator. Part of the <a href="index.html">Average and Standard Deviation Calculator</a> suite.</p>
+        </footer>
+    </div>
+
+    <style>
+    .single-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: 'Courier New', monospace;
+        background: var(--surface);
+        color: var(--text);
+        transition: border-color 0.2s;
+    }
+    .single-input:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+    select.single-input {
+        cursor: pointer;
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var meanInput = document.getElementById('sampleMean');
+        var sdInput = document.getElementById('sampleSD');
+        var nInput = document.getElementById('sampleSize');
+        var confSelect = document.getElementById('confLevel');
+        var calculateBtn = document.getElementById('calculateBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var exampleBtn = document.getElementById('exampleBtn');
+        var copyBtn = document.getElementById('copyBtn');
+        var resultsDiv = document.getElementById('results');
+        var errorDiv = document.getElementById('error');
+        var stepsDiv = document.getElementById('steps');
+        var themeToggle = document.getElementById('themeToggle');
+        var lastResults = null;
+
+        var zTable = { 0.80: 1.282, 0.85: 1.440, 0.90: 1.645, 0.95: 1.960, 0.99: 2.576, 0.995: 2.807, 0.999: 3.291 };
+
+        initTheme();
+        calculateBtn.addEventListener('click', calculate);
+        clearBtn.addEventListener('click', clearAll);
+        exampleBtn.addEventListener('click', function() {
+            meanInput.value = '75'; sdInput.value = '10'; nInput.value = '50'; confSelect.value = '0.95'; calculate();
+        });
+        copyBtn.addEventListener('click', copyResults);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        [meanInput, sdInput, nInput].forEach(function(el) {
+            el.addEventListener('input', debounce(calculate, 400));
+        });
+        confSelect.addEventListener('change', calculate);
+
+        function calculate() {
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+
+            var mean = parseFloat(meanInput.value);
+            var sd = parseFloat(sdInput.value);
+            var n = parseInt(nInput.value);
+            var conf = parseFloat(confSelect.value);
+
+            if (isNaN(mean) || isNaN(sd) || isNaN(n)) return;
+            if (sd <= 0) { showError('Standard deviation must be greater than 0.'); return; }
+            if (n < 2) { showError('Sample size must be at least 2.'); return; }
+
+            var z = zTable[conf] || 1.960;
+            var se = sd / Math.sqrt(n);
+            var margin = z * se;
+            var lower = mean - margin;
+            var upper = mean + margin;
+            var confPct = Math.round(conf * 100);
+
+            lastResults = { mean:mean, sd:sd, n:n, conf:confPct, z:z, se:se, margin:margin, lower:lower, upper:upper };
+
+            document.getElementById('ci').textContent = '(' + fmt(lower) + ', ' + fmt(upper) + ')';
+            document.getElementById('margin').textContent = fmt(margin);
+            document.getElementById('lower').textContent = fmt(lower);
+            document.getElementById('upper').textContent = fmt(upper);
+            document.getElementById('critical').textContent = z.toFixed(3);
+            document.getElementById('se').textContent = fmt(se);
+
+            var html = '<h4>Step 1: Identify the Values</h4>';
+            html += '<div class="step">x̄ = ' + fmt(mean) + ', s = ' + fmt(sd) + ', n = ' + n + ', Confidence = ' + confPct + '%</div>';
+            html += '<h4>Step 2: Find the Critical Value</h4>';
+            html += '<div class="step">z* for ' + confPct + '% confidence = ' + z.toFixed(3) + '</div>';
+            html += '<h4>Step 3: Calculate Standard Error</h4>';
+            html += '<div class="step">SE = s / √n = ' + fmt(sd) + ' / √' + n + ' = ' + fmt(sd) + ' / ' + fmt(Math.sqrt(n)) + ' = <span class="formula-inline">' + fmt(se) + '</span></div>';
+            html += '<h4>Step 4: Calculate Margin of Error</h4>';
+            html += '<div class="step">E = z* × SE = ' + z.toFixed(3) + ' × ' + fmt(se) + ' = <span class="formula-inline">' + fmt(margin) + '</span></div>';
+            html += '<h4>Step 5: Confidence Interval</h4>';
+            html += '<div class="step">CI = x̄ ± E = ' + fmt(mean) + ' ± ' + fmt(margin) + '</div>';
+            html += '<div class="step">Lower = ' + fmt(mean) + ' − ' + fmt(margin) + ' = <span class="formula-inline">' + fmt(lower) + '</span></div>';
+            html += '<div class="step">Upper = ' + fmt(mean) + ' + ' + fmt(margin) + ' = <span class="formula-inline">' + fmt(upper) + '</span></div>';
+            stepsDiv.innerHTML = html;
+
+            resultsDiv.style.display = 'block';
+            copyBtn.style.display = 'inline-block';
+        }
+
+        function fmt(num) {
+            if (Number.isInteger(num)) return num.toString();
+            return parseFloat(num.toPrecision(10)).toString();
+        }
+        function showError(msg) { errorDiv.textContent = msg; errorDiv.style.display = 'block'; }
+        function clearAll() { meanInput.value = ''; sdInput.value = ''; nInput.value = ''; resultsDiv.style.display = 'none'; errorDiv.style.display = 'none'; copyBtn.style.display = 'none'; meanInput.focus(); }
+        function debounce(fn, ms) { var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); }; }
+        function copyResults() {
+            if (!lastResults) return;
+            var r = lastResults;
+            navigator.clipboard.writeText(r.conf+'% Confidence Interval: ('+fmt(r.lower)+', '+fmt(r.upper)+')\nMargin of Error: '+fmt(r.margin)+'\nCritical Value (z*): '+r.z.toFixed(3)+'\nStandard Error: '+fmt(r.se)+'\nSample Mean: '+fmt(r.mean)+'\nSample SD: '+fmt(r.sd)+'\nSample Size: '+r.n).then(function(){copyBtn.textContent='Copied!';setTimeout(function(){copyBtn.textContent='Copy Results';},2000);});
+        }
+        function initTheme() { var s=localStorage.getItem('theme'); if(s) document.documentElement.setAttribute('data-theme',s); updateIcon(); }
+        function toggleTheme() { var c=document.documentElement.getAttribute('data-theme'); var n=c==='dark'?'light':(c==='light'?'dark':(window.matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark')); document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateIcon(); }
+        function updateIcon() { var t=document.documentElement.getAttribute('data-theme'); var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches); themeToggle.textContent=d?'☀️':'🌙'; }
+    });
+    </script>
+</body>
+</html>

@@ -1,28 +1,48 @@
 document.addEventListener('DOMContentLoaded', function() {
     const dataInput = document.getElementById('dataInput');
+    const dataInputB = document.getElementById('dataInputB');
     const calculateBtn = document.getElementById('calculateBtn');
     const clearBtn = document.getElementById('clearBtn');
     const exampleBtn = document.getElementById('exampleBtn');
     const copyBtn = document.getElementById('copyBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const compareCheckbox = document.getElementById('compareMode');
+    const compareInputs = document.getElementById('compareInputs');
     const resultsDiv = document.getElementById('results');
     const errorDiv = document.getElementById('error');
     const stepsDiv = document.getElementById('steps');
     const histogramCanvas = document.getElementById('histogram');
+    const histogramCanvasB = document.getElementById('histogramB');
     const sortedDataDiv = document.getElementById('sortedData');
+    const themeToggle = document.getElementById('themeToggle');
+    const toast = document.getElementById('shareToast');
+    const normalResults = document.getElementById('normalResults');
+    const compareResults = document.getElementById('compareResults');
+    const histogramBWrapper = document.getElementById('histogramBWrapper');
 
     let debounceTimer = null;
     let lastResults = null;
+    let lastResultsB = null;
+
+    initTheme();
+    loadFromURL();
 
     calculateBtn.addEventListener('click', calculate);
     clearBtn.addEventListener('click', clearAll);
     exampleBtn.addEventListener('click', loadExample);
     copyBtn.addEventListener('click', copyResults);
+    shareBtn.addEventListener('click', shareResults);
+
+    if (compareCheckbox) {
+        compareCheckbox.addEventListener('change', function() {
+            compareInputs.classList.toggle('active', this.checked);
+            if (!this.checked && dataInputB) dataInputB.value = '';
+            calculate();
+        });
+    }
 
     dataInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && e.ctrlKey) {
-            e.preventDefault();
-            calculate();
-        }
+        if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); calculate(); }
     });
 
     dataInput.addEventListener('input', function() {
@@ -30,16 +50,68 @@ document.addEventListener('DOMContentLoaded', function() {
         debounceTimer = setTimeout(calculate, 400);
     });
 
+    if (dataInputB) {
+        dataInputB.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(calculate, 400);
+        });
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved) {
+            document.documentElement.setAttribute('data-theme', saved);
+        }
+        updateThemeIcon();
+    }
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        let next;
+        if (current === 'dark') {
+            next = 'light';
+        } else if (current === 'light') {
+            next = 'dark';
+        } else {
+            next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+        if (!themeToggle) return;
+        const theme = document.documentElement.getAttribute('data-theme');
+        let isDark;
+        if (theme === 'dark') isDark = true;
+        else if (theme === 'light') isDark = false;
+        else isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+    }
+
+    function loadFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const data = params.get('data');
+        if (data) {
+            dataInput.value = data;
+            calculate();
+        }
+    }
+
     function calculate() {
         errorDiv.style.display = 'none';
         resultsDiv.style.display = 'none';
         copyBtn.style.display = 'none';
+        shareBtn.style.display = 'none';
 
         const input = dataInput.value.trim();
         if (!input) {
-            if (input === '') {
-                return;
-            }
+            if (input === '') return;
             showError('Please enter some numbers to calculate.');
             return;
         }
@@ -49,20 +121,50 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('No valid numbers found. Enter numbers separated by commas, spaces, or line breaks.');
             return;
         }
-
         if (numbers.length < 2) {
             showError('Please enter at least 2 numbers to calculate standard deviation.');
             return;
         }
 
+        const isCompare = compareCheckbox && compareCheckbox.checked && dataInputB;
+        let numbersB = null;
+
+        if (isCompare) {
+            const inputB = dataInputB.value.trim();
+            if (inputB) {
+                numbersB = parseNumbers(inputB);
+                if (numbersB.length < 2) {
+                    showError('Dataset B needs at least 2 numbers for comparison.');
+                    return;
+                }
+            }
+        }
+
         const results = computeStats(numbers);
         lastResults = results;
-        displayResults(results);
+
+        if (numbersB) {
+            lastResultsB = computeStats(numbersB);
+            normalResults.style.display = 'none';
+            compareResults.style.display = 'grid';
+            histogramBWrapper.style.display = 'block';
+            displayCompareResults(results, lastResultsB);
+            drawHistogram(histogramCanvas, numbers, results, '#3498db');
+            if (histogramCanvasB) drawHistogram(histogramCanvasB, numbersB, lastResultsB, '#27ae60');
+        } else {
+            lastResultsB = null;
+            normalResults.style.display = 'block';
+            compareResults.style.display = 'none';
+            histogramBWrapper.style.display = 'none';
+            displayResults(results);
+            drawHistogram(histogramCanvas, numbers, results, getComputedStyle(document.documentElement).getPropertyValue('--histogram-bar').trim() || '#3498db');
+            displaySortedData(numbers, results);
+        }
+
         displaySteps(numbers, results);
-        drawHistogram(numbers, results);
-        displaySortedData(numbers, results);
         resultsDiv.style.display = 'block';
         copyBtn.style.display = 'inline-block';
+        shareBtn.style.display = 'inline-block';
     }
 
     function parseNumbers(input) {
@@ -86,15 +188,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const range = max - min;
         const median = calcMedian(sorted);
         const mode = calcMode(data);
-
         const squaredDiffs = data.map(x => Math.pow(x - mean, 2));
         const sumSquaredDiffs = squaredDiffs.reduce((a, b) => a + b, 0);
-
         const sampleVariance = n > 1 ? sumSquaredDiffs / (n - 1) : 0;
         const popVariance = sumSquaredDiffs / n;
         const sampleStdDev = Math.sqrt(sampleVariance);
         const popStdDev = Math.sqrt(popVariance);
-
         const q1 = calcPercentile(sorted, 25);
         const q3 = calcPercentile(sorted, 75);
 
@@ -132,49 +231,72 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults(r) {
-        document.getElementById('count').textContent = r.n;
-        document.getElementById('sum').textContent = formatNumber(r.sum);
-        document.getElementById('mean').textContent = formatNumber(r.mean);
-        document.getElementById('sampleStdDev').textContent = formatNumber(r.sampleStdDev);
-        document.getElementById('popStdDev').textContent = formatNumber(r.popStdDev);
-        document.getElementById('sampleVariance').textContent = formatNumber(r.sampleVariance);
-        document.getElementById('popVariance').textContent = formatNumber(r.popVariance);
-        document.getElementById('median').textContent = formatNumber(r.median);
-        document.getElementById('mode').textContent = r.mode ? r.mode.map(formatNumber).join(', ') : 'No mode';
-        document.getElementById('range').textContent = formatNumber(r.range);
-        document.getElementById('min').textContent = formatNumber(r.min);
-        document.getElementById('max').textContent = formatNumber(r.max);
+        setText('count', r.n);
+        setText('sum', formatNumber(r.sum));
+        setText('mean', formatNumber(r.mean));
+        setText('sampleStdDev', formatNumber(r.sampleStdDev));
+        setText('popStdDev', formatNumber(r.popStdDev));
+        setText('sampleVariance', formatNumber(r.sampleVariance));
+        setText('popVariance', formatNumber(r.popVariance));
+        setText('median', formatNumber(r.median));
+        setText('mode', r.mode ? r.mode.map(formatNumber).join(', ') : 'No mode');
+        setText('range', formatNumber(r.range));
+        setText('min', formatNumber(r.min));
+        setText('max', formatNumber(r.max));
+    }
+
+    function displayCompareResults(rA, rB) {
+        const pairs = [
+            ['count', rA.n, rB.n],
+            ['sum', rA.sum, rB.sum],
+            ['mean', rA.mean, rB.mean],
+            ['sampleStdDev', rA.sampleStdDev, rB.sampleStdDev],
+            ['popStdDev', rA.popStdDev, rB.popStdDev],
+            ['sampleVariance', rA.sampleVariance, rB.sampleVariance],
+            ['popVariance', rA.popVariance, rB.popVariance],
+            ['median', rA.median, rB.median],
+            ['range', rA.range, rB.range],
+            ['min', rA.min, rB.min],
+            ['max', rA.max, rB.max],
+        ];
+        for (const [id, valA, valB] of pairs) {
+            const elA = document.getElementById(id + 'A');
+            const elB = document.getElementById(id + 'B');
+            if (elA) elA.textContent = typeof valA === 'number' && !Number.isInteger(valA) ? formatNumber(valA) : valA;
+            if (elB) elB.textContent = typeof valB === 'number' && !Number.isInteger(valB) ? formatNumber(valB) : valB;
+        }
+        const modeA = document.getElementById('modeA');
+        const modeB = document.getElementById('modeB');
+        if (modeA) modeA.textContent = rA.mode ? rA.mode.map(formatNumber).join(', ') : 'No mode';
+        if (modeB) modeB.textContent = rB.mode ? rB.mode.map(formatNumber).join(', ') : 'No mode';
     }
 
     function displaySteps(data, r) {
         let html = '';
-
         html += '<h4>Step 1: Find the Mean (Average)</h4>';
-        html += `<div class="step">Sum = ${data.map(n => formatNumber(n)).join(' + ')} = ${formatNumber(r.sum)}</div>`;
-        html += `<div class="step">Mean = ${formatNumber(r.sum)} / ${r.n} = <span class="formula-inline">${formatNumber(r.mean)}</span></div>`;
+        html += '<div class="step">Sum = ' + data.map(n => formatNumber(n)).join(' + ') + ' = ' + formatNumber(r.sum) + '</div>';
+        html += '<div class="step">Mean = ' + formatNumber(r.sum) + ' / ' + r.n + ' = <span class="formula-inline">' + formatNumber(r.mean) + '</span></div>';
 
         html += '<h4>Step 2: Squared Differences from the Mean</h4>';
-        data.forEach((x, i) => {
-            const diff = x - r.mean;
-            html += `<div class="step">(${formatNumber(x)} - ${formatNumber(r.mean)})² = ${formatNumber(r.squaredDiffs[i])}</div>`;
+        data.forEach(function(x, i) {
+            html += '<div class="step">(' + formatNumber(x) + ' - ' + formatNumber(r.mean) + ')² = ' + formatNumber(r.squaredDiffs[i]) + '</div>';
         });
 
         html += '<h4>Step 3: Sum of Squared Differences</h4>';
-        html += `<div class="step">Σ(xᵢ - x̄)² = ${formatNumber(r.sumSquaredDiffs)}</div>`;
+        html += '<div class="step">Σ(xᵢ - x̄)² = ' + formatNumber(r.sumSquaredDiffs) + '</div>';
 
         html += '<h4>Step 4: Variances</h4>';
-        html += `<div class="step">s² = ${formatNumber(r.sumSquaredDiffs)} / ${r.n - 1} = <span class="formula-inline">${formatNumber(r.sampleVariance)}</span></div>`;
-        html += `<div class="step">σ² = ${formatNumber(r.sumSquaredDiffs)} / ${r.n} = <span class="formula-inline">${formatNumber(r.popVariance)}</span></div>`;
+        html += '<div class="step">s² = ' + formatNumber(r.sumSquaredDiffs) + ' / ' + (r.n - 1) + ' = <span class="formula-inline">' + formatNumber(r.sampleVariance) + '</span></div>';
+        html += '<div class="step">σ² = ' + formatNumber(r.sumSquaredDiffs) + ' / ' + r.n + ' = <span class="formula-inline">' + formatNumber(r.popVariance) + '</span></div>';
 
         html += '<h4>Step 5: Standard Deviations</h4>';
-        html += `<div class="step">s = √${formatNumber(r.sampleVariance)} = <span class="formula-inline">${formatNumber(r.sampleStdDev)}</span></div>`;
-        html += `<div class="step">σ = √${formatNumber(r.popVariance)} = <span class="formula-inline">${formatNumber(r.popStdDev)}</span></div>`;
+        html += '<div class="step">s = √' + formatNumber(r.sampleVariance) + ' = <span class="formula-inline">' + formatNumber(r.sampleStdDev) + '</span></div>';
+        html += '<div class="step">σ = √' + formatNumber(r.popVariance) + ' = <span class="formula-inline">' + formatNumber(r.popStdDev) + '</span></div>';
 
         stepsDiv.innerHTML = html;
     }
 
-    function drawHistogram(data, r) {
-        const canvas = histogramCanvas;
+    function drawHistogram(canvas, data, r, color) {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
@@ -196,13 +318,12 @@ document.addEventListener('DOMContentLoaded', function() {
             bins[idx]++;
         }
         const maxCount = Math.max(...bins);
-
         const pad = { top: 10, right: 10, bottom: 30, left: 40 };
         const plotW = cssW - pad.left - pad.right;
         const plotH = cssH - pad.top - pad.bottom;
         const barW = plotW / numBins;
 
-        ctx.fillStyle = '#3498db';
+        ctx.fillStyle = color;
         for (let i = 0; i < numBins; i++) {
             const barH = maxCount > 0 ? (bins[i] / maxCount) * plotH : 0;
             const x = pad.left + i * barW;
@@ -220,13 +341,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.stroke();
         ctx.setLineDash([]);
 
+        const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#7f8c8d';
         ctx.fillStyle = '#e74c3c';
         ctx.font = '11px -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('mean', meanX, pad.top - 1);
 
-        ctx.fillStyle = '#7f8c8d';
-        ctx.font = '11px -apple-system, sans-serif';
+        ctx.fillStyle = textColor;
         ctx.textAlign = 'center';
         for (let i = 0; i <= numBins; i += Math.max(1, Math.floor(numBins / 5))) {
             const val = r.min + i * binWidth;
@@ -270,11 +391,42 @@ document.addEventListener('DOMContentLoaded', function() {
             'Sample Variance (s²): ' + formatNumber(r.sampleVariance),
             'Population Variance (σ²): ' + formatNumber(r.popVariance),
         ];
-        const text = lines.join('\n');
-        navigator.clipboard.writeText(text).then(function() {
+        if (lastResultsB) {
+            const rB = lastResultsB;
+            lines.push('', '--- Dataset B ---');
+            lines.push('Count (n): ' + rB.n);
+            lines.push('Mean: ' + formatNumber(rB.mean));
+            lines.push('Sample Std Dev (s): ' + formatNumber(rB.sampleStdDev));
+            lines.push('Median: ' + formatNumber(rB.median));
+        }
+        navigator.clipboard.writeText(lines.join('\n')).then(function() {
             copyBtn.textContent = 'Copied!';
             setTimeout(function() { copyBtn.textContent = 'Copy Results'; }, 2000);
         });
+    }
+
+    function shareResults() {
+        const data = dataInput.value.trim();
+        if (!data) return;
+        const url = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(data);
+        navigator.clipboard.writeText(url).then(function() {
+            showToast('Link copied to clipboard!');
+        }).catch(function() {
+            window.history.replaceState(null, '', '?data=' + encodeURIComponent(data));
+            showToast('URL updated — copy from address bar');
+        });
+    }
+
+    function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('visible');
+        setTimeout(function() { toast.classList.remove('visible'); }, 2500);
+    }
+
+    function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
     }
 
     function formatNumber(num) {
@@ -291,18 +443,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function clearAll() {
         dataInput.value = '';
+        if (dataInputB) dataInputB.value = '';
         resultsDiv.style.display = 'none';
         errorDiv.style.display = 'none';
         copyBtn.style.display = 'none';
+        shareBtn.style.display = 'none';
         sortedDataDiv.innerHTML = '';
         lastResults = null;
-        const ctx = histogramCanvas.getContext('2d');
-        ctx.clearRect(0, 0, histogramCanvas.width, histogramCanvas.height);
+        lastResultsB = null;
+        clearCanvas(histogramCanvas);
+        clearCanvas(histogramCanvasB);
+        if (window.location.search) {
+            window.history.replaceState(null, '', window.location.pathname);
+        }
         dataInput.focus();
+    }
+
+    function clearCanvas(canvas) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function loadExample() {
         dataInput.value = '10, 12, 23, 23, 16, 23, 21, 15';
+        if (dataInputB && compareCheckbox && compareCheckbox.checked) {
+            dataInputB.value = '8, 14, 18, 20, 22, 25, 27, 30';
+        }
         dataInput.focus();
         calculate();
     }

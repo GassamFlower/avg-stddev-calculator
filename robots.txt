@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gassamflower.github.io/avg-stddev-calculator/sitemap.xml

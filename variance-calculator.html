@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variance Calculator — Find Sample and Population Variance</title>
+    <meta name="description" content="Free variance calculator to find the sample and population variance of a data set. Shows step-by-step calculations with formulas and interpretation.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/variance-calculator.html">
+
+    <meta property="og:title" content="Variance Calculator — Sample and Population Variance">
+    <meta property="og:description" content="Free variance calculator with step-by-step calculations. Find sample variance (s²) and population variance (σ²) instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/variance-calculator.html">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Variance Calculator — Sample and Population Variance">
+    <meta name="twitter:description" content="Free variance calculator with step-by-step calculations. Find sample and population variance instantly.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Variance Calculator",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": "Free variance calculator to find sample and population variance with step-by-step calculations.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Variance Calculator</h1>
+            <p class="subtitle">Calculate sample variance (s²) and population variance (σ²) with step-by-step work</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </header>
+
+        <main>
+            <section class="calculator-section" aria-label="Variance Calculator">
+                <div class="input-group">
+                    <label for="dataInput">Enter your numbers (separated by commas, spaces, or line breaks):</label>
+                    <textarea id="dataInput" placeholder="e.g., 2, 4, 6, 8, 10"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                    <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                    <button id="copyBtn" class="btn btn-copy" style="display:none;">Copy Results</button>
+                </div>
+
+                <div id="results" class="results" style="display:none;" aria-live="polite">
+                    <h2>Results</h2>
+                    <div class="results-grid">
+                        <div class="result-card highlight">
+                            <div class="result-label">Sample Variance (s²)</div>
+                            <div id="sampleVar" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Population Variance (σ²)</div>
+                            <div id="popVar" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Sample Std Dev (s)</div>
+                            <div id="sampleSD" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Population Std Dev (σ)</div>
+                            <div id="popSD" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Count (n)</div>
+                            <div id="count" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Mean (x̄)</div>
+                            <div id="mean" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Sum of Squares (SS)</div>
+                            <div id="ss" class="result-value">—</div>
+                        </div>
+                    </div>
+                    <details class="steps-section">
+                        <summary>Show Step-by-Step Calculation</summary>
+                        <div id="steps" class="steps-content"></div>
+                    </details>
+                </div>
+                <div id="error" class="error" style="display:none;" role="alert"></div>
+            </section>
+
+            <section class="info-section">
+                <h2>What Is Variance?</h2>
+                <p>Variance measures how far a set of numbers is spread out from their mean. It is the average of the squared differences from the mean. A higher variance indicates that the data points are more spread out.</p>
+
+                <h3>Variance Formulas</h3>
+                <h4>Sample Variance</h4>
+                <p>Used when your data is a subset of a larger population:</p>
+                <div class="formula">s² = Σ(xᵢ - x̄)² / (n - 1)</div>
+
+                <h4>Population Variance</h4>
+                <p>Used when your data represents the entire population:</p>
+                <div class="formula">σ² = Σ(xᵢ - μ)² / N</div>
+
+                <h3>Variance vs. Standard Deviation</h3>
+                <p>Standard deviation is the square root of variance. While variance is measured in squared units (e.g., meters²), standard deviation is in the original units (e.g., meters), making it easier to interpret. Both measure the same thing — spread of data — but standard deviation is more commonly reported.</p>
+
+                <table class="interpretation-table">
+                    <thead>
+                        <tr><th>Variance Value</th><th>What It Means</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>s² = 0</td><td>All values are identical (no spread at all)</td></tr>
+                        <tr><td>s² is small</td><td>Data points are close to the mean</td></tr>
+                        <tr><td>s² is large</td><td>Data points are widely spread</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>How to Calculate Variance by Hand</h3>
+                <ol>
+                    <li>Find the mean of the data set</li>
+                    <li>Subtract the mean from each value</li>
+                    <li>Square each difference</li>
+                    <li>Add all the squared differences (this is the "sum of squares")</li>
+                    <li>Divide by (n − 1) for sample variance, or by n for population variance</li>
+                </ol>
+
+                <h3>Example</h3>
+                <p>Data set: <strong>2, 4, 6, 8, 10</strong></p>
+                <ol>
+                    <li>Mean = (2 + 4 + 6 + 8 + 10) / 5 = 30 / 5 = 6</li>
+                    <li>Differences: (2−6) = −4, (4−6) = −2, (6−6) = 0, (8−6) = 2, (10−6) = 4</li>
+                    <li>Squared: 16, 4, 0, 4, 16</li>
+                    <li>Sum of squares = 16 + 4 + 0 + 4 + 16 = 40</li>
+                    <li>Sample variance = 40 / (5−1) = 40 / 4 = <strong>10</strong></li>
+                    <li>Population variance = 40 / 5 = <strong>8</strong></li>
+                </ol>
+            </section>
+
+            <section class="related-calculators">
+                <h2>Related Calculators</h2>
+                <div class="related-grid">
+                    <a href="index.html" class="related-link">Average &amp; Std Dev Calculator<span class="related-desc">Calculate mean, standard deviation, and more</span></a>
+                    <a href="median-calculator.html" class="related-link">Median Calculator<span class="related-desc">Find the median, mean, and mode</span></a>
+                    <a href="z-score-calculator.html" class="related-link">Z-Score Calculator<span class="related-desc">Calculate z-scores for normal distribution</span></a>
+                    <a href="confidence-interval-calculator.html" class="related-link">Confidence Interval Calculator<span class="related-desc">Compute confidence intervals</span></a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Free online variance calculator. Part of the <a href="index.html">Average and Standard Deviation Calculator</a> suite.</p>
+        </footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dataInput = document.getElementById('dataInput');
+        var calculateBtn = document.getElementById('calculateBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var exampleBtn = document.getElementById('exampleBtn');
+        var copyBtn = document.getElementById('copyBtn');
+        var resultsDiv = document.getElementById('results');
+        var errorDiv = document.getElementById('error');
+        var stepsDiv = document.getElementById('steps');
+        var themeToggle = document.getElementById('themeToggle');
+        var lastResults = null;
+
+        initTheme();
+        calculateBtn.addEventListener('click', calculate);
+        clearBtn.addEventListener('click', clearAll);
+        exampleBtn.addEventListener('click', function() { dataInput.value = '2, 4, 6, 8, 10'; calculate(); });
+        copyBtn.addEventListener('click', copyResults);
+        dataInput.addEventListener('input', debounce(calculate, 400));
+        themeToggle.addEventListener('click', toggleTheme);
+
+        function calculate() {
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            var input = dataInput.value.trim();
+            if (!input) return;
+            var nums = parseNums(input);
+            if (nums.length === 0) { showError('No valid numbers found.'); return; }
+            if (nums.length < 2) { showError('Enter at least 2 numbers.'); return; }
+
+            var n = nums.length;
+            var sum = nums.reduce(function(a,b){return a+b;},0);
+            var mean = sum / n;
+            var sqDiffs = nums.map(function(x){return Math.pow(x-mean,2);});
+            var ss = sqDiffs.reduce(function(a,b){return a+b;},0);
+            var sampleVar = ss / (n-1);
+            var popVar = ss / n;
+
+            lastResults = {n:n, mean:mean, ss:ss, sampleVar:sampleVar, popVar:popVar, sampleSD:Math.sqrt(sampleVar), popSD:Math.sqrt(popVar), nums:nums, sqDiffs:sqDiffs};
+
+            document.getElementById('sampleVar').textContent = fmt(sampleVar);
+            document.getElementById('popVar').textContent = fmt(popVar);
+            document.getElementById('sampleSD').textContent = fmt(lastResults.sampleSD);
+            document.getElementById('popSD').textContent = fmt(lastResults.popSD);
+            document.getElementById('count').textContent = n;
+            document.getElementById('mean').textContent = fmt(mean);
+            document.getElementById('ss').textContent = fmt(ss);
+
+            var html = '<h4>Step 1: Mean</h4>';
+            html += '<div class="step">x̄ = ' + nums.map(fmt).join(' + ') + ' / ' + n + ' = ' + fmt(mean) + '</div>';
+            html += '<h4>Step 2: Squared Differences</h4>';
+            nums.forEach(function(x,i){html += '<div class="step">(' + fmt(x) + ' − ' + fmt(mean) + ')² = ' + fmt(sqDiffs[i]) + '</div>';});
+            html += '<h4>Step 3: Sum of Squares</h4>';
+            html += '<div class="step">SS = ' + fmt(ss) + '</div>';
+            html += '<h4>Step 4: Variances</h4>';
+            html += '<div class="step">s² = ' + fmt(ss) + ' / ' + (n-1) + ' = <span class="formula-inline">' + fmt(sampleVar) + '</span></div>';
+            html += '<div class="step">σ² = ' + fmt(ss) + ' / ' + n + ' = <span class="formula-inline">' + fmt(popVar) + '</span></div>';
+            stepsDiv.innerHTML = html;
+
+            resultsDiv.style.display = 'block';
+            copyBtn.style.display = 'inline-block';
+        }
+
+        function parseNums(input) {
+            return input.split(/[,\s\n\r\t]+/).filter(function(t){return t.length>0;}).map(parseFloat).filter(function(n){return !isNaN(n);});
+        }
+        function fmt(num) {
+            if (Number.isInteger(num)) return num.toString();
+            return parseFloat(num.toPrecision(10)).toString();
+        }
+        function showError(msg) { errorDiv.textContent = msg; errorDiv.style.display = 'block'; }
+        function clearAll() { dataInput.value = ''; resultsDiv.style.display = 'none'; errorDiv.style.display = 'none'; copyBtn.style.display = 'none'; dataInput.focus(); }
+        function debounce(fn, ms) { var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); }; }
+        function copyResults() {
+            if (!lastResults) return;
+            var r = lastResults;
+            navigator.clipboard.writeText('Count: '+r.n+'\nMean: '+fmt(r.mean)+'\nSample Variance (s²): '+fmt(r.sampleVar)+'\nPopulation Variance (σ²): '+fmt(r.popVar)+'\nSample Std Dev: '+fmt(r.sampleSD)+'\nPop Std Dev: '+fmt(r.popSD)+'\nSum of Squares: '+fmt(r.ss)).then(function(){copyBtn.textContent='Copied!';setTimeout(function(){copyBtn.textContent='Copy Results';},2000);});
+        }
+        function initTheme() { var s=localStorage.getItem('theme'); if(s) document.documentElement.setAttribute('data-theme',s); updateIcon(); }
+        function toggleTheme() { var c=document.documentElement.getAttribute('data-theme'); var n=c==='dark'?'light':(c==='light'?'dark':(window.matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark')); document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateIcon(); }
+        function updateIcon() { var t=document.documentElement.getAttribute('data-theme'); var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches); themeToggle.textContent=d?'☀️':'🌙'; }
+    });
+    </script>
+</body>
+</html>

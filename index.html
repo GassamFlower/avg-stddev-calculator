@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Average and Standard Deviation Calculator</title>
-    <meta name="description" content="Free online calculator to find the average, standard deviation, variance, median, mode, and range of a data set. Shows step-by-step calculations and data distribution chart.">
+    <meta name="description" content="Free online calculator to find the average, standard deviation, variance, median, mode, and range of a data set. Shows step-by-step calculations, histogram, and dataset comparison.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/">
 
     <meta property="og:title" content="Average and Standard Deviation Calculator">
-    <meta property="og:description" content="Free online calculator for mean, standard deviation, variance, median, mode, and range. Shows step-by-step calculations and histogram.">
+    <meta property="og:description" content="Free online calculator for mean, standard deviation, variance, median, mode, and range. Shows step-by-step calculations, histogram, and dataset comparison.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Average and Standard Deviation Calculator">
+    <meta name="twitter:description" content="Free online calculator for mean, standard deviation, variance, median, mode, and range. Shows step-by-step calculations and histogram.">
 
     <script type="application/ld+json">
     {
@@ -20,7 +24,7 @@
       "name": "Average and Standard Deviation Calculator",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "Web Browser",
-      "description": "Free online calculator to find the average, standard deviation, variance, median, mode, and range. Shows step-by-step calculations and data distribution chart.",
+      "description": "Free online calculator to find the average, standard deviation, variance, median, mode, and range. Shows step-by-step calculations, histogram, and dataset comparison.",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -93,6 +97,7 @@
         <header>
             <h1>Average and Standard Deviation Calculator</h1>
             <p class="subtitle">Enter your data set to calculate mean, standard deviation, variance, median, mode, and more</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
         </header>
 
         <main>
@@ -102,70 +107,124 @@
                     <textarea id="dataInput" placeholder="e.g., 10, 20, 30, 40, 50&#10;or one number per line&#10;&#10;Results update automatically as you type" aria-describedby="inputHelp"></textarea>
                 </div>
 
+                <div class="compare-toggle">
+                    <input type="checkbox" id="compareMode">
+                    <label for="compareMode">Compare with another dataset</label>
+                </div>
+
+                <div id="compareInputs" class="compare-inputs">
+                    <label class="compare-label" for="dataInputB">Dataset B:</label>
+                    <textarea id="dataInputB" placeholder="Enter second dataset for comparison..."></textarea>
+                </div>
+
                 <div class="button-group">
                     <button id="calculateBtn" class="btn btn-primary">Calculate</button>
                     <button id="clearBtn" class="btn btn-secondary">Clear</button>
                     <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
                     <button id="copyBtn" class="btn btn-copy" style="display: none;" aria-label="Copy results to clipboard">Copy Results</button>
+                    <button id="shareBtn" class="btn btn-share" style="display: none;" aria-label="Share results via URL">Share</button>
                 </div>
 
                 <div id="results" class="results" style="display: none;" aria-live="polite">
                     <h2>Results</h2>
-                    <div class="results-grid">
-                        <div class="result-card highlight">
-                            <div class="result-label">Average (Mean)</div>
-                            <div id="mean" class="result-value">—</div>
+
+                    <div id="normalResults">
+                        <div class="results-grid">
+                            <div class="result-card highlight">
+                                <div class="result-label">Average (Mean)</div>
+                                <div id="mean" class="result-value">—</div>
+                            </div>
+                            <div class="result-card highlight">
+                                <div class="result-label">Sample Std Dev (s)</div>
+                                <div id="sampleStdDev" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Population Std Dev (σ)</div>
+                                <div id="popStdDev" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Sample Variance (s²)</div>
+                                <div id="sampleVariance" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Population Variance (σ²)</div>
+                                <div id="popVariance" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Median</div>
+                                <div id="median" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Mode</div>
+                                <div id="mode" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Range</div>
+                                <div id="range" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Min</div>
+                                <div id="min" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Max</div>
+                                <div id="max" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Count (n)</div>
+                                <div id="count" class="result-value">—</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Sum</div>
+                                <div id="sum" class="result-value">—</div>
+                            </div>
                         </div>
-                        <div class="result-card highlight">
-                            <div class="result-label">Sample Std Dev (s)</div>
-                            <div id="sampleStdDev" class="result-value">—</div>
+                    </div>
+
+                    <div id="compareResults" class="compare-results" style="display: none;">
+                        <div>
+                            <h3>Dataset A</h3>
+                            <div class="results-grid">
+                                <div class="result-card compare-a"><div class="result-label">Count</div><div id="countA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Sum</div><div id="sumA" class="result-value">—</div></div>
+                                <div class="result-card compare-a highlight"><div class="result-label">Mean</div><div id="meanA" class="result-value">—</div></div>
+                                <div class="result-card compare-a highlight"><div class="result-label">Sample Std Dev</div><div id="sampleStdDevA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Pop Std Dev</div><div id="popStdDevA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Sample Variance</div><div id="sampleVarianceA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Pop Variance</div><div id="popVarianceA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Median</div><div id="medianA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Mode</div><div id="modeA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Range</div><div id="rangeA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Min</div><div id="minA" class="result-value">—</div></div>
+                                <div class="result-card compare-a"><div class="result-label">Max</div><div id="maxA" class="result-value">—</div></div>
+                            </div>
                         </div>
-                        <div class="result-card">
-                            <div class="result-label">Population Std Dev (σ)</div>
-                            <div id="popStdDev" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Sample Variance (s²)</div>
-                            <div id="sampleVariance" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Population Variance (σ²)</div>
-                            <div id="popVariance" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Median</div>
-                            <div id="median" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Mode</div>
-                            <div id="mode" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Range</div>
-                            <div id="range" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Min</div>
-                            <div id="min" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Max</div>
-                            <div id="max" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Count (n)</div>
-                            <div id="count" class="result-value">—</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Sum</div>
-                            <div id="sum" class="result-value">—</div>
+                        <div>
+                            <h3>Dataset B</h3>
+                            <div class="results-grid">
+                                <div class="result-card compare-b"><div class="result-label">Count</div><div id="countB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Sum</div><div id="sumB" class="result-value">—</div></div>
+                                <div class="result-card compare-b highlight"><div class="result-label">Mean</div><div id="meanB" class="result-value">—</div></div>
+                                <div class="result-card compare-b highlight"><div class="result-label">Sample Std Dev</div><div id="sampleStdDevB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Pop Std Dev</div><div id="popStdDevB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Sample Variance</div><div id="sampleVarianceB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Pop Variance</div><div id="popVarianceB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Median</div><div id="medianB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Mode</div><div id="modeB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Range</div><div id="rangeB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Min</div><div id="minB" class="result-value">—</div></div>
+                                <div class="result-card compare-b"><div class="result-label">Max</div><div id="maxB" class="result-value">—</div></div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="histogram-section">
                         <h3>Data Distribution</h3>
                         <div class="histogram-wrapper">
-                            <canvas id="histogram" aria-label="Histogram showing the distribution of your data"></canvas>
+                            <canvas id="histogram" aria-label="Histogram showing the distribution of Dataset A"></canvas>
+                        </div>
+                        <div class="histogram-wrapper" id="histogramBWrapper" style="display: none; margin-top: 12px;">
+                            <canvas id="histogramB" aria-label="Histogram showing the distribution of Dataset B"></canvas>
                         </div>
                     </div>
 
@@ -320,12 +379,36 @@
                     </details>
                 </div>
             </section>
+
+            <section class="related-calculators" aria-label="Related calculators">
+                <h2>Related Calculators</h2>
+                <div class="related-grid">
+                    <a href="variance-calculator.html" class="related-link">
+                        Variance Calculator
+                        <span class="related-desc">Calculate variance and standard deviation step by step</span>
+                    </a>
+                    <a href="median-calculator.html" class="related-link">
+                        Median Calculator
+                        <span class="related-desc">Find the median, mean, and mode of a dataset</span>
+                    </a>
+                    <a href="z-score-calculator.html" class="related-link">
+                        Z-Score Calculator
+                        <span class="related-desc">Calculate z-scores and understand normal distribution</span>
+                    </a>
+                    <a href="confidence-interval-calculator.html" class="related-link">
+                        Confidence Interval Calculator
+                        <span class="related-desc">Compute confidence intervals for population mean</span>
+                    </a>
+                </div>
+            </section>
         </main>
 
         <footer>
             <p>Free online statistical calculator. Calculate mean, standard deviation, variance, median, mode, and range instantly.</p>
         </footer>
     </div>
+
+    <div id="shareToast" class="share-toast"></div>
 
     <script src="js/calculator.js"></script>
 </body>

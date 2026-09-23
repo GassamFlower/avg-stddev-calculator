@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Median Calculator — Find the Median, Mean, and Mode</title>
+    <meta name="description" content="Free median calculator to find the median, mean, mode, and range of a data set. Shows step-by-step calculations for odd and even datasets.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/median-calculator.html">
+
+    <meta property="og:title" content="Median Calculator — Find the Median, Mean, and Mode">
+    <meta property="og:description" content="Free median calculator with step-by-step work. Find median, mean, mode, and range for any dataset.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/median-calculator.html">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Median Calculator — Find the Median, Mean, and Mode">
+    <meta name="twitter:description" content="Free median calculator with step-by-step work. Find median, mean, mode, and range instantly.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Median Calculator",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": "Free median calculator to find the median, mean, mode, and range with step-by-step calculations.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Median Calculator</h1>
+            <p class="subtitle">Find the median, mean, mode, and range of your data set with step-by-step work</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </header>
+
+        <main>
+            <section class="calculator-section" aria-label="Median Calculator">
+                <div class="input-group">
+                    <label for="dataInput">Enter your numbers (separated by commas, spaces, or line breaks):</label>
+                    <textarea id="dataInput" placeholder="e.g., 3, 7, 1, 9, 5, 2, 8"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                    <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                    <button id="copyBtn" class="btn btn-copy" style="display:none;">Copy Results</button>
+                </div>
+
+                <div id="results" class="results" style="display:none;" aria-live="polite">
+                    <h2>Results</h2>
+                    <div class="results-grid">
+                        <div class="result-card highlight">
+                            <div class="result-label">Median</div>
+                            <div id="median" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Mean (Average)</div>
+                            <div id="mean" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Mode</div>
+                            <div id="mode" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Range</div>
+                            <div id="range" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Min</div>
+                            <div id="min" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Max</div>
+                            <div id="max" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Count (n)</div>
+                            <div id="count" class="result-value">—</div>
+                        </div>
+                    </div>
+                    <div id="sortedData" class="sorted-section" aria-label="Sorted data"></div>
+                    <details class="steps-section">
+                        <summary>Show Step-by-Step Calculation</summary>
+                        <div id="steps" class="steps-content"></div>
+                    </details>
+                </div>
+                <div id="error" class="error" style="display:none;" role="alert"></div>
+            </section>
+
+            <section class="info-section">
+                <h2>What Is the Median?</h2>
+                <p>The median is the middle value in a sorted data set. It divides the data into two equal halves: half the values are below the median, and half are above. Unlike the mean, the median is not affected by extreme values (outliers), making it a robust measure of central tendency.</p>
+
+                <h3>How to Find the Median</h3>
+                <h4>Odd Number of Values</h4>
+                <p>Sort the data and pick the middle value:</p>
+                <div class="formula">Median = value at position (n + 1) / 2</div>
+                <p>Example: For <strong>1, 3, 5, 7, 9</strong> (n=5), the median is the 3rd value = <strong>5</strong></p>
+
+                <h4>Even Number of Values</h4>
+                <p>Sort the data and average the two middle values:</p>
+                <div class="formula">Median = (value at position n/2 + value at position n/2 + 1) / 2</div>
+                <p>Example: For <strong>1, 3, 5, 7</strong> (n=4), the median = (3 + 5) / 2 = <strong>4</strong></p>
+
+                <h3>Median vs. Mean</h3>
+                <table class="interpretation-table">
+                    <thead>
+                        <tr><th>Feature</th><th>Median</th><th>Mean</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Affected by outliers?</td><td>No — robust</td><td>Yes — sensitive</td></tr>
+                        <tr><td>Best for skewed data?</td><td>Yes</td><td>No</td></tr>
+                        <tr><td>Used in statistics?</td><td>Central tendency</td><td>Central tendency</td></tr>
+                        <tr><td>Example (1,2,3,4,100)</td><td>3</td><td>22</td></tr>
+                    </tbody>
+                </table>
+                <p>When data is skewed (has extreme values), the median is usually a better representation of "typical" than the mean. For example, median income is more meaningful than mean income because a few very high earners can dramatically inflate the average.</p>
+
+                <h3>Median, Mode, and Range</h3>
+                <ul>
+                    <li><strong>Mode:</strong> The value that appears most frequently. A dataset can have no mode, one mode, or multiple modes.</li>
+                    <li><strong>Range:</strong> The difference between the maximum and minimum values (Max − Min).</li>
+                    <li><strong>Together:</strong> Median, mode, and range are often reported alongside the mean to give a complete picture of a dataset's central tendency and spread.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <div class="use-cases-grid">
+                    <div class="use-case-card">
+                        <h4>Real Estate</h4>
+                        <p>Median home prices are reported instead of averages because a few luxury homes can skew the mean upward, misrepresenting the typical home price.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Income & Economics</h4>
+                        <p>Median income is the standard measure because income distributions are heavily right-skewed. The median represents what a "typical" person earns.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Test Scores</h4>
+                        <p>Teachers use the median to understand the "middle" student performance, especially when a few very high or low scores distort the average.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Healthcare</h4>
+                        <p>Median survival time is reported in medical studies because a few long-term survivors can inflate the mean, giving a misleading picture.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="related-calculators">
+                <h2>Related Calculators</h2>
+                <div class="related-grid">
+                    <a href="index.html" class="related-link">Average &amp; Std Dev Calculator<span class="related-desc">Calculate mean, standard deviation, and more</span></a>
+                    <a href="variance-calculator.html" class="related-link">Variance Calculator<span class="related-desc">Calculate sample and population variance</span></a>
+                    <a href="z-score-calculator.html" class="related-link">Z-Score Calculator<span class="related-desc">Calculate z-scores for normal distribution</span></a>
+                    <a href="confidence-interval-calculator.html" class="related-link">Confidence Interval Calculator<span class="related-desc">Compute confidence intervals</span></a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Free online median calculator. Part of the <a href="index.html">Average and Standard Deviation Calculator</a> suite.</p>
+        </footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dataInput = document.getElementById('dataInput');
+        var calculateBtn = document.getElementById('calculateBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var exampleBtn = document.getElementById('exampleBtn');
+        var copyBtn = document.getElementById('copyBtn');
+        var resultsDiv = document.getElementById('results');
+        var errorDiv = document.getElementById('error');
+        var stepsDiv = document.getElementById('steps');
+        var sortedDataDiv = document.getElementById('sortedData');
+        var themeToggle = document.getElementById('themeToggle');
+        var lastResults = null;
+
+        initTheme();
+        calculateBtn.addEventListener('click', calculate);
+        clearBtn.addEventListener('click', clearAll);
+        exampleBtn.addEventListener('click', function() { dataInput.value = '12, 15, 7, 23, 9, 18, 3, 21, 14, 16'; calculate(); });
+        copyBtn.addEventListener('click', copyResults);
+        dataInput.addEventListener('input', debounce(calculate, 400));
+        themeToggle.addEventListener('click', toggleTheme);
+
+        function calculate() {
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            var input = dataInput.value.trim();
+            if (!input) return;
+            var nums = parseNums(input);
+            if (nums.length === 0) { showError('No valid numbers found.'); return; }
+            if (nums.length < 2) { showError('Enter at least 2 numbers.'); return; }
+
+            var sorted = nums.slice().sort(function(a,b){return a-b;});
+            var n = sorted.length;
+            var sum = sorted.reduce(function(a,b){return a+b;},0);
+            var mean = sum / n;
+            var median = calcMedian(sorted);
+            var mode = calcMode(nums);
+            var min = sorted[0];
+            var max = sorted[n-1];
+            var range = max - min;
+
+            lastResults = {n:n, mean:mean, median:median, mode:mode, min:min, max:max, range:range, sorted:sorted};
+
+            document.getElementById('median').textContent = fmt(median);
+            document.getElementById('mean').textContent = fmt(mean);
+            document.getElementById('mode').textContent = mode ? mode.map(fmt).join(', ') : 'No mode';
+            document.getElementById('range').textContent = fmt(range);
+            document.getElementById('min').textContent = fmt(min);
+            document.getElementById('max').textContent = fmt(max);
+            document.getElementById('count').textContent = n;
+
+            sortedDataDiv.innerHTML = '<div class="sorted-label">Sorted data (ascending):</div><div class="sorted-values">' + sorted.map(fmt).join(', ') + '</div>';
+
+            var html = '<h4>Step 1: Sort the Data</h4>';
+            html += '<div class="step">' + sorted.map(fmt).join(', ') + '</div>';
+            html += '<h4>Step 2: Find the Median</h4>';
+            if (n % 2 !== 0) {
+                var midPos = Math.floor(n/2) + 1;
+                html += '<div class="step">n = ' + n + ' (odd). Middle position = (' + n + ' + 1) / 2 = ' + midPos + '</div>';
+                html += '<div class="step">Median = ' + fmt(sorted[Math.floor(n/2)]) + '</div>';
+            } else {
+                var pos1 = n/2, pos2 = n/2+1;
+                html += '<div class="step">n = ' + n + ' (even). Middle positions = ' + pos1 + ' and ' + pos2 + '</div>';
+                html += '<div class="step">Values at positions ' + pos1 + ' and ' + pos2 + ': ' + fmt(sorted[n/2-1]) + ' and ' + fmt(sorted[n/2]) + '</div>';
+                html += '<div class="step">Median = (' + fmt(sorted[n/2-1]) + ' + ' + fmt(sorted[n/2]) + ') / 2 = <span class="formula-inline">' + fmt(median) + '</span></div>';
+            }
+            html += '<h4>Step 3: Mean</h4>';
+            html += '<div class="step">Mean = ' + fmt(sum) + ' / ' + n + ' = <span class="formula-inline">' + fmt(mean) + '</span></div>';
+            stepsDiv.innerHTML = html;
+
+            resultsDiv.style.display = 'block';
+            copyBtn.style.display = 'inline-block';
+        }
+
+        function calcMedian(s) { var n=s.length, m=Math.floor(n/2); return n%2!==0 ? s[m] : (s[m-1]+s[m])/2; }
+        function calcMode(data) {
+            var freq={}, maxF=0;
+            data.forEach(function(v){freq[v]=(freq[v]||0)+1; if(freq[v]>maxF)maxF=freq[v];});
+            if (maxF===1) return null;
+            var modes=Object.keys(freq).filter(function(k){return freq[k]===maxF;}).map(Number);
+            return modes.length===data.length ? null : modes;
+        }
+        function parseNums(input) { return input.split(/[,\s\n\r\t]+/).filter(function(t){return t.length>0;}).map(parseFloat).filter(function(n){return !isNaN(n);}); }
+        function fmt(num) { if (Number.isInteger(num)) return num.toString(); return parseFloat(num.toPrecision(10)).toString(); }
+        function showError(msg) { errorDiv.textContent = msg; errorDiv.style.display = 'block'; }
+        function clearAll() { dataInput.value = ''; resultsDiv.style.display = 'none'; errorDiv.style.display = 'none'; copyBtn.style.display = 'none'; sortedDataDiv.innerHTML = ''; dataInput.focus(); }
+        function debounce(fn, ms) { var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); }; }
+        function copyResults() {
+            if (!lastResults) return;
+            var r = lastResults;
+            navigator.clipboard.writeText('Count: '+r.n+'\nMedian: '+fmt(r.median)+'\nMean: '+fmt(r.mean)+'\nMode: '+(r.mode?r.mode.map(fmt).join(', '):'No mode')+'\nRange: '+fmt(r.range)+'\nMin: '+fmt(r.min)+'\nMax: '+fmt(r.max)).then(function(){copyBtn.textContent='Copied!';setTimeout(function(){copyBtn.textContent='Copy Results';},2000);});
+        }
+        function initTheme() { var s=localStorage.getItem('theme'); if(s) document.documentElement.setAttribute('data-theme',s); updateIcon(); }
+        function toggleTheme() { var c=document.documentElement.getAttribute('data-theme'); var n=c==='dark'?'light':(c==='light'?'dark':(window.matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark')); document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateIcon(); }
+        function updateIcon() { var t=document.documentElement.getAttribute('data-theme'); var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches); themeToggle.textContent=d?'☀️':'🌙'; }
+    });
+    </script>
+</body>
+</html>

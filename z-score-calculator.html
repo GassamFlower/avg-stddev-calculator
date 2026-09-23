@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Score Calculator — Standard Score & Normal Distribution</title>
+    <meta name="description" content="Free z-score calculator to find the standard score, percentile, and probability for any value in a normal distribution. Shows the formula and step-by-step work.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gassamflower.github.io/avg-stddev-calculator/z-score-calculator.html">
+
+    <meta property="og:title" content="Z-Score Calculator — Standard Score & Normal Distribution">
+    <meta property="og:description" content="Free z-score calculator with step-by-step work. Find standard score, percentile, and probability for normal distribution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gassamflower.github.io/avg-stddev-calculator/z-score-calculator.html">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Z-Score Calculator — Standard Score & Normal Distribution">
+    <meta name="twitter:description" content="Free z-score calculator. Find standard score, percentile, and probability for normal distribution.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Z-Score Calculator",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": "Free z-score calculator to find standard score and percentile for normal distribution.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Z-Score Calculator</h1>
+            <p class="subtitle">Calculate the standard score (z-score), percentile, and probability for a normal distribution</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </header>
+
+        <main>
+            <section class="calculator-section" aria-label="Z-Score Calculator">
+                <div class="input-group">
+                    <label for="rawValue">Value (X):</label>
+                    <input type="text" id="rawValue" class="single-input" placeholder="e.g., 85">
+                </div>
+                <div class="input-group">
+                    <label for="meanValue">Mean (μ or x̄):</label>
+                    <input type="text" id="meanValue" class="single-input" placeholder="e.g., 70">
+                </div>
+                <div class="input-group">
+                    <label for="sdValue">Standard Deviation (σ or s):</label>
+                    <input type="text" id="sdValue" class="single-input" placeholder="e.g., 10">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                    <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                </div>
+
+                <div id="results" class="results" style="display:none;" aria-live="polite">
+                    <h2>Results</h2>
+                    <div class="results-grid">
+                        <div class="result-card highlight">
+                            <div class="result-label">Z-Score</div>
+                            <div id="zScore" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Percentile</div>
+                            <div id="percentile" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">P(X &lt; value)</div>
+                            <div id="pBelow" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">P(X &gt; value)</div>
+                            <div id="pAbove" class="result-value">—</div>
+                        </div>
+                    </div>
+                    <div id="interpretation" class="sorted-section"></div>
+                </div>
+                <div id="error" class="error" style="display:none;" role="alert"></div>
+            </section>
+
+            <section class="info-section">
+                <h2>What Is a Z-Score?</h2>
+                <p>A z-score (standard score) tells you how many standard deviations a value is from the mean. A positive z-score means the value is above the mean; a negative z-score means it's below.</p>
+
+                <h3>Z-Score Formula</h3>
+                <div class="formula">z = (X - μ) / σ</div>
+                <p>Where:</p>
+                <ul>
+                    <li><strong>X</strong> = the raw value</li>
+                    <li><strong>μ</strong> = the mean of the population</li>
+                    <li><strong>σ</strong> = the standard deviation</li>
+                </ul>
+
+                <h3>Understanding Z-Scores</h3>
+                <table class="interpretation-table">
+                    <thead>
+                        <tr><th>Z-Score</th><th>Meaning</th><th>Percentile (approx.)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>z = 0</td><td>Value equals the mean</td><td>50th percentile</td></tr>
+                        <tr><td>z = +1</td><td>1 standard deviation above mean</td><td>84th percentile</td></tr>
+                        <tr><td>z = -1</td><td>1 standard deviation below mean</td><td>16th percentile</td></tr>
+                        <tr><td>z = +2</td><td>2 standard deviations above mean</td><td>97.7th percentile</td></tr>
+                        <tr><td>z = -2</td><td>2 standard deviations below mean</td><td>2.3rd percentile</td></tr>
+                        <tr><td>|z| &gt; 3</td><td>Very unusual (outlier)</td><td>&lt; 0.15% or &gt; 99.85%</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>The Empirical Rule and Z-Scores</h3>
+                <p>For a normal distribution:</p>
+                <ul>
+                    <li><strong>68%</strong> of data has z-scores between <strong>-1 and +1</strong></li>
+                    <li><strong>95%</strong> of data has z-scores between <strong>-2 and +2</strong></li>
+                    <li><strong>99.7%</strong> of data has z-scores between <strong>-3 and +3</strong></li>
+                </ul>
+
+                <h3>When to Use Z-Scores</h3>
+                <div class="use-cases-grid">
+                    <div class="use-case-card">
+                        <h4>Comparing Different Tests</h4>
+                        <p>Z-scores let you compare results from different tests with different scales. For example, comparing an SAT score to an ACT score by converting both to z-scores.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Finding Percentiles</h4>
+                        <p>Z-scores tell you what percentage of values fall below a given point. Useful for understanding where a data point ranks in a distribution.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Detecting Outliers</h4>
+                        <p>Values with |z| > 3 are considered outliers in a normal distribution. Z-scores help identify unusual data points in quality control and research.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h4>Hypothesis Testing</h4>
+                        <p>Z-scores are fundamental to z-tests and confidence intervals. They form the basis of many statistical inference procedures.</p>
+                    </div>
+                </div>
+
+                <h3>Example</h3>
+                <p>A student scores <strong>85</strong> on a test where the mean is <strong>70</strong> and the standard deviation is <strong>10</strong>.</p>
+                <ol>
+                    <li>z = (85 - 70) / 10 = 15 / 10 = <strong>1.5</strong></li>
+                    <li>This means the score is 1.5 standard deviations above the mean</li>
+                    <li>The percentile is approximately the <strong>93.3rd percentile</strong> — the student scored higher than about 93.3% of test-takers</li>
+                </ol>
+            </section>
+
+            <section class="related-calculators">
+                <h2>Related Calculators</h2>
+                <div class="related-grid">
+                    <a href="index.html" class="related-link">Average &amp; Std Dev Calculator<span class="related-desc">Calculate mean and standard deviation</span></a>
+                    <a href="variance-calculator.html" class="related-link">Variance Calculator<span class="related-desc">Calculate sample and population variance</span></a>
+                    <a href="median-calculator.html" class="related-link">Median Calculator<span class="related-desc">Find the median, mean, and mode</span></a>
+                    <a href="confidence-interval-calculator.html" class="related-link">Confidence Interval Calculator<span class="related-desc">Compute confidence intervals</span></a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Free online z-score calculator. Part of the <a href="index.html">Average and Standard Deviation Calculator</a> suite.</p>
+        </footer>
+    </div>
+
+    <style>
+    .single-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: 'Courier New', monospace;
+        background: var(--surface);
+        color: var(--text);
+        transition: border-color 0.2s;
+    }
+    .single-input:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var rawInput = document.getElementById('rawValue');
+        var meanInput = document.getElementById('meanValue');
+        var sdInput = document.getElementById('sdValue');
+        var calculateBtn = document.getElementById('calculateBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var exampleBtn = document.getElementById('exampleBtn');
+        var resultsDiv = document.getElementById('results');
+        var errorDiv = document.getElementById('error');
+        var interpDiv = document.getElementById('interpretation');
+        var themeToggle = document.getElementById('themeToggle');
+
+        initTheme();
+        calculateBtn.addEventListener('click', calculate);
+        clearBtn.addEventListener('click', clearAll);
+        exampleBtn.addEventListener('click', function() {
+            rawInput.value = '85'; meanInput.value = '70'; sdInput.value = '10'; calculate();
+        });
+        themeToggle.addEventListener('click', toggleTheme);
+
+        [rawInput, meanInput, sdInput].forEach(function(el) {
+            el.addEventListener('input', debounce(calculate, 400));
+        });
+
+        function calculate() {
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+
+            var x = parseFloat(rawValue.value);
+            var mean = parseFloat(meanInput.value);
+            var sd = parseFloat(sdInput.value);
+
+            if (isNaN(x) || isNaN(mean) || isNaN(sd)) return;
+            if (sd <= 0) { showError('Standard deviation must be greater than 0.'); return; }
+
+            var z = (x - mean) / sd;
+            var pBelow = normalCDF(z);
+            var pAbove = 1 - pBelow;
+            var pctile = pBelow * 100;
+
+            document.getElementById('zScore').textContent = z.toFixed(4);
+            document.getElementById('percentile').textContent = pctile.toFixed(2) + '%';
+            document.getElementById('pBelow').textContent = (pBelow * 100).toFixed(4) + '%';
+            document.getElementById('pAbove').textContent = (pAbove * 100).toFixed(4) + '%';
+
+            var interp = '';
+            if (Math.abs(z) < 1) {
+                interp = '<div class="sorted-label">Interpretation:</div><div class="sorted-values">The value is within 1 standard deviation of the mean. This is a typical/common value — about 68% of data falls in this range.</div>';
+            } else if (Math.abs(z) < 2) {
+                interp = '<div class="sorted-label">Interpretation:</div><div class="sorted-values">The value is between 1 and 2 standard deviations from the mean. This is somewhat unusual — only about 5% of data falls beyond 2 standard deviations.</div>';
+            } else if (Math.abs(z) < 3) {
+                interp = '<div class="sorted-label">Interpretation:</div><div class="sorted-values">The value is between 2 and 3 standard deviations from the mean. This is quite unusual — only about 0.3% of data falls beyond 3 standard deviations.</div>';
+            } else {
+                interp = '<div class="sorted-label">Interpretation:</div><div class="sorted-values">The value is more than 3 standard deviations from the mean. This is very unusual and may be considered an <strong>outlier</strong>.</div>';
+            }
+            interp += '<div style="margin-top:8px;font-size:0.9rem;color:var(--text-secondary);">Direction: ' + (z > 0 ? 'Above' : z < 0 ? 'Below' : 'At') + ' the mean by ' + Math.abs(z).toFixed(2) + ' standard deviations.</div>';
+            interpDiv.innerHTML = interp;
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function normalCDF(z) {
+            var a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+            var sign = z < 0 ? -1 : 1;
+            var x = Math.abs(z) / Math.sqrt(2);
+            var t = 1.0 / (1.0 + p * x);
+            var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1) * t * Math.exp(-x*x);
+            return 0.5 * (1.0 + sign * y);
+        }
+
+        function showError(msg) { errorDiv.textContent = msg; errorDiv.style.display = 'block'; }
+        function clearAll() { rawInput.value = ''; meanInput.value = ''; sdInput.value = ''; resultsDiv.style.display = 'none'; errorDiv.style.display = 'none'; rawInput.focus(); }
+        function debounce(fn, ms) { var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); }; }
+        function initTheme() { var s=localStorage.getItem('theme'); if(s) document.documentElement.setAttribute('data-theme',s); updateIcon(); }
+        function toggleTheme() { var c=document.documentElement.getAttribute('data-theme'); var n=c==='dark'?'light':(c==='light'?'dark':(window.matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark')); document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateIcon(); }
+        function updateIcon() { var t=document.documentElement.getAttribute('data-theme'); var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches); themeToggle.textContent=d?'☀️':'🌙'; }
+    });
+    </script>
+</body>
+</html>
