@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average and Standard Deviation Calculator</title>
+    <meta name="description" content="Free online calculator to find the average (mean) and standard deviation of a data set. Shows step-by-step calculations for sample and population standard deviation.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Average and Standard Deviation Calculator</h1>
+            <p class="subtitle">Enter your data set to calculate mean, standard deviation, and variance</p>
+        </header>
+
+        <main>
+            <section class="calculator-section">
+                <div class="input-group">
+                    <label for="dataInput">Enter your numbers (separated by commas, spaces, or line breaks):</label>
+                    <textarea id="dataInput" placeholder="e.g., 10, 20, 30, 40, 50&#10;or one number per line"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                    <button id="exampleBtn" class="btn btn-secondary">Load Example</button>
+                </div>
+
+                <div id="results" class="results" style="display: none;">
+                    <h2>Results</h2>
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-label">Count (n)</div>
+                            <div id="count" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Sum</div>
+                            <div id="sum" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Average (Mean)</div>
+                            <div id="mean" class="result-value">—</div>
+                        </div>
+                        <div class="result-card highlight">
+                            <div class="result-label">Sample Std Dev (s)</div>
+                            <div id="sampleStdDev" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Population Std Dev (σ)</div>
+                            <div id="popStdDev" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Sample Variance (s²)</div>
+                            <div id="sampleVariance" class="result-value">—</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Population Variance (σ²)</div>
+                            <div id="popVariance" class="result-value">—</div>
+                        </div>
+                    </div>
+
+                    <details class="steps-section">
+                        <summary>Show Step-by-Step Calculation</summary>
+                        <div id="steps" class="steps-content"></div>
+                    </details>
+                </div>
+
+                <div id="error" class="error" style="display: none;"></div>
+            </section>
+
+            <section class="info-section">
+                <h2>How to Calculate Average and Standard Deviation</h2>
+
+                <h3>Average (Mean)</h3>
+                <p>The average is the sum of all values divided by the number of values:</p>
+                <div class="formula">x̄ = (Σxᵢ) / n</div>
+
+                <h3>Standard Deviation</h3>
+                <p>Standard deviation measures how spread out the data is from the mean.</p>
+
+                <h4>Sample Standard Deviation</h4>
+                <p>Use this when your data is a sample from a larger population:</p>
+                <div class="formula">s = √[ Σ(xᵢ - x̄)² / (n - 1) ]</div>
+
+                <h4>Population Standard Deviation</h4>
+                <p>Use this when your data represents the entire population:</p>
+                <div class="formula">σ = √[ Σ(xᵢ - μ)² / N ]</div>
+
+                <h3>When to Use Each</h3>
+                <ul>
+                    <li><strong>Sample standard deviation (s):</strong> Use when analyzing a subset of data to estimate the variability of a larger population. This is the most common case in research and quality control.</li>
+                    <li><strong>Population standard deviation (σ):</strong> Use when you have data for every member of the population you're studying, such as test scores for an entire class.</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>Free online statistical calculator. Calculate mean, standard deviation, and variance instantly.</p>
+        </footer>
+    </div>
+
+    <script src="js/calculator.js"></script>
+</body>
+</html>
