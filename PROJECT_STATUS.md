@@ -5,7 +5,9 @@
 - **项目名称**: Average and Standard Deviation Calculator
 - **目标关键词**: `average and standard deviation calculator`
 - **关键词数据**: Volume 1,600 | KD 19 | CPC $1.57 | KGR ≈ 0
-- **项目状态**: 开发完成，待部署
+- **项目状态**: 已上线
+- **线上地址**: https://gassamflower.github.io/avg-stddev-calculator/
+- **GitHub 仓库**: https://github.com/GassamFlower/avg-stddev-calculator
 
 ## 当前进度
 
@@ -14,12 +16,15 @@
 | 立项门 | ✅ 通过 | 2026-09-23 |
 | 架构门 | ✅ 跳过（纯静态，无后端/数据库） | — |
 | 业务门 | ✅ 跳过（纯前端，无安全审查需求） | — |
-| 上线门 | ⏳ 待部署 | — |
+| 上线门 | ✅ 通过 | 2026-09-23 |
 
 ## Git 提交历史
 
 ```
+aa0c460 fix: 更新 canonical URL 和 og:url 为实际 GitHub Pages 地址
+e11ead7 chore: 项目状态文档 + 复盘报告（SEO 经验反哺）
 e28169b feat: SEO 增强（结构化数据 + Open Graph + canonical）
+a7f1c7a feat: MVP 计算器页面（纯静态，SEO 优化）
 2158e3d chore: 创建项目 Agent 宪法（SEO 角色贯穿全程）
 15b42ea docs: 技术选型（纯静态）+ 架构设计（SEO 优先）
 a7587b8 docs: 项目立项文档（含 SEO 定位与关键词验证）
@@ -51,9 +56,10 @@ a7587b8 docs: 项目立项文档（含 SEO 定位与关键词验证）
 - [x] 公式用文本（可爬取），不用图片
 - [x] 响应式设计（移动端友好）
 
-## 下一步
+## 上线后动作（待执行）
 
-1. 注册域名（推荐 `avgstddevcalculator.com`）
-2. 部署到 GitHub Pages / Cloudflare Pages / Vercel
-3. 提交到 Google Search Console
-4. 监控排名和收录
+1. 提交到 Google Search Console（验证域名 + 请求索引）
+2. 提交到 Bing Webmaster Tools（可选）
+3. 运行 Lighthouse 检查性能分数
+4. 监控关键词排名变化
+5. （可选）注册自定义域名 `avgstddevcalculator.com` 替代 GitHub Pages 子域名

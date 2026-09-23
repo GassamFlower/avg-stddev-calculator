@@ -1,28 +1,24 @@
 # 部署指南
 
-## 推荐方案：GitHub Pages（免费，最快）
+## 当前部署状态
 
-### 步骤
+- **部署平台**: GitHub Pages
+- **线上地址**: https://gassamflower.github.io/avg-stddev-calculator/
+- **GitHub 仓库**: https://github.com/GassamFlower/avg-stddev-calculator
+- **部署模式**: Legacy（从 main 分支根目录直接服务）
+- **HTTPS**: 已启用（GitHub 强制）
+- **部署时间**: 2026-09-23
 
-1. **创建 GitHub 仓库**
-   ```bash
-   cd E:/FiveTierProjectSystem/01-Inbox/gf/avg-stddev-calculator
-   git remote add origin https://github.com/你的用户名/avg-stddev-calculator.git
-   git branch -M main
-   git push -u origin main
-   ```
+## 已完成部署步骤
 
-2. **启用 GitHub Pages**
-   - 进入仓库 Settings → Pages
-   - Source 选择 `Deploy from a branch`
-   - Branch 选择 `main` / `root`
-   - 保存
+1. ✅ 创建 GitHub 仓库 `GassamFlower/avg-stddev-calculator`
+2. ✅ 推送代码到 main 分支
+3. ✅ 启用 GitHub Pages（legacy 模式，main 分支 / 根目录）
+4. ✅ 触发构建并确认状态为 `built`
+5. ✅ 验证线上可访问
+6. ✅ 更新 canonical URL 和 og:url 为实际地址
 
-3. **访问你的网站**
-   - URL: `https://你的用户名.github.io/avg-stddev-calculator/`
-   - 等待 1-2 分钟生效
-
-4. **（可选）绑定自定义域名**
+## （可选）绑定自定义域名
    - 注册域名（如 `avgstddevcalculator.com`）
    - 在仓库 Settings → Pages → Custom domain 填入域名
    - 在域名注册商处添加 CNAME 记录指向 `你的用户名.github.io`
@@ -46,17 +42,17 @@
 
 ## 部署后验证清单
 
-- [ ] 网站可通过 URL 访问
-- [ ] HTTPS 已启用
-- [ ] 在谷歌搜索 `site:你的域名` 验证收录（等待 1-7 天）
-- [ ] 提交 sitemap 到 Google Search Console（可选）
+- [x] 网站可通过 URL 访问
+- [x] HTTPS 已启用
+- [ ] 在谷歌搜索 `site:gassamflower.github.io/avg-stddev-calculator` 验证收录（等待 1-7 天）
+- [ ] 提交到 Google Search Console（验证域名 + 请求索引）
 - [ ] 运行 Lighthouse 检查性能分数
 
-## SEO 上线后动作
+## SEO 上线后动作（待执行）
 
 1. **提交到 Google Search Console**
-   - 验证域名所有权
-   - 提交 URL 请求索引
+   - 验证 `gassamflower.github.io` 域名所有权（或前缀模式）
+   - 提交 `https://gassamflower.github.io/avg-stddev-calculator/` 请求索引
    - 监控覆盖率和性能
 
 2. **提交到 Bing Webmaster Tools**（可选）
@@ -64,6 +60,10 @@
 3. **监控排名**
    - 搜索 `average and standard deviation calculator` 观察排名变化
    - 用 Google Search Console 查看实际展示位置和点击率
+
+4. **（可选）注册自定义域名**
+   - 推荐 `avgstddevcalculator.com`
+   - 绑定后更新 canonical URL 和 og:url
 
 ## 域名建议
 
